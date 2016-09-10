@@ -66,6 +66,24 @@
         </div>
         <div class="col-sm-4"> 
         
+
+<script>
+$(document).ready(function(){
+    
+    setInterval(function(){
+        $.getJSON("http://0.0.0.0:5000/emotion_value", function(result){
+            console.log(result);
+            $.each(result, function(i, field){
+                $("#emotion").append(field + " ");
+            });
+        });
+    }, 300);
+});
+</script>
+
+      <div id="emotion"></div>
+
+
         </div>
       </div>
 

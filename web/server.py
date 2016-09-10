@@ -1,10 +1,23 @@
-from flask import Flask, render_template, Response
+from flask import Flask, render_template, Response, jsonify
+import sqlite3
 from camera import VideoCamera
 # from camera import IPCamera
 
 app = Flask(__name__)
 
-webcam_capture = VideoCamera()
+
+
+db = sqlite3.connect('mydb')
+cursor = db.cursor()
+cursor.execute('''DROP TABLE users''')
+db.commit()
+cursor.execute('''
+    CREATE TABLE users(id INTEGER PRIMARY KEY, emotion TEXT, activity TEXT)
+''')
+db.commit()
+
+webcam_capture = VideoCamera(db)
+
 
 # ip_capture = IPCamera('http://192.168.43.50:8080/video')
 
@@ -29,8 +42,13 @@ def video_feed():
 def test():
     return render_template('test.html')
 
+@app.route('/emotion_value')
+def emotion_value():
+    print "emotion value GET query happened"
+    return jsonify({'emotion':webcam_capture.get_emotion_value()})
+
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', debug=True)
+    app.run(host='0.0.0.0', debug=True,threaded=True)
 
 
 
