@@ -14,9 +14,12 @@ class VideoCamera(object):
     
     def get_frame(self):
         success, image = self.video.read()
-        self.emotion = self.get_emotion(image)
+        self.emotion = self.compute_emotion(image)
         ret, jpeg = cv2.imencode('.jpg', image)
         return jpeg.tobytes()
 
-    def get_emotion(self,image):
+    def compute_emotion(self,image):
     	return numpy.random.randint(0,6)
+
+    def get_emotion_value(self):
+    	return self.emotion
