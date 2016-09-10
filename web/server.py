@@ -11,20 +11,22 @@ webcam_capture = VideoCamera()
 @app.route('/')
 @app.route('/live')
 def index():
-    return render_template('index.html')
+    return render_template('index.html',emotion=emotion_value())
 
 def gen(camera):
     while True:
-        output = camera.get_frame()
-        return [output['emotion'],(b'--frame\r\n'
-               b'Content-Type: image/jpeg\r\n\r\n' + output['jpeg'] + b'\r\n\r\n')]
+        output = webcam_capture.get_frame()
+        yield (b'--frame\r\n'
+               b'Content-Type: image/jpeg\r\n\r\n' + output + b'\r\n\r\n')
 
 @app.route('/video_feed')
 def video_feed():
-
     resp = gen(webcam_capture)
-    return Response(resp[1], mimetype='multipart/x-mixed-replace; boundary=frame')
+    return Response(resp, mimetype='multipart/x-mixed-replace; boundary=frame')
 
+@app.route('/emotion_value')
+def emotion_value():
+    return webcam_capture.emotion
 
 @app.route('/test')
 def test():
