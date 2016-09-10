@@ -16,7 +16,8 @@ class VideoCamera(object):
         success, image = self.video.read()
         self.emotion = self.compute_emotion(image)
         ret, jpeg = cv2.imencode('.jpg', image)
-        return jpeg.tobytes()
+        resized_jpeg = cv2.resize(jpeg, (300, 300)) 
+        return resized_jpeg
 
     def compute_emotion(self,image):
     	return numpy.random.randint(0,6)

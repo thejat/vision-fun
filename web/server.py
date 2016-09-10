@@ -19,10 +19,8 @@ def index():
 @app.route('/video_feed')
 def video_feed():
     frame = webcam_capture.get_frame()
-    img_io = StringIO()
-    cv2.imwrite(img_io, cv2.imencode('.jpg', frame)[1].tostring())
-    img_io.seek(0)
-    return send_file(img_io, mimetype='image/jpeg')
+    cv2.imwrite('temp.jpg',frame)
+    return send_file('temp.jpg', mimetype='image/jpeg')
 
 @app.route('/emotion_value')
 def emotion_value():
