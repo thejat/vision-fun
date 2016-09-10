@@ -1,7 +1,5 @@
-from flask import Flask, render_template,jsonify, send_file
+from flask import Flask, render_template, Response
 from camera import VideoCamera
-import numpy, cv2
-from io import StringIO
 # from camera import IPCamera
 
 app = Flask(__name__)
@@ -13,24 +11,26 @@ webcam_capture = VideoCamera()
 @app.route('/')
 @app.route('/live')
 def index():
-    return render_template('index.html')
+    return render_template('index.html',emotion=emotion_value())
 
+def gen(camera):
+    while True:
+        output = webcam_capture.get_frame()
+        yield (b'--frame\r\n'
+               b'Content-Type: image/jpeg\r\n\r\n' + output + b'\r\n\r\n')
 
 @app.route('/video_feed')
 def video_feed():
-    frame = webcam_capture.get_frame()
-    cv2.imwrite('temp.jpg',frame)
-    return send_file('temp.jpg', mimetype='image/jpeg')
+    resp = gen(webcam_capture)
+    return Response(resp, mimetype='multipart/x-mixed-replace; boundary=frame')
 
 @app.route('/emotion_value')
 def emotion_value():
-    return jsonify({'emotion':webcam_capture.get_emotion_value()})
+    return webcam_capture.emotion
 
 @app.route('/test')
 def test():
-    f = {'emotion':numpy.random.randint(0,6)}
-    return jsonify(**f)
-
+    return render_template('test.html')
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', debug=True)
