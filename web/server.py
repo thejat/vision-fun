@@ -11,7 +11,7 @@ webcam_capture = VideoCamera()
 @app.route('/')
 @app.route('/live')
 def index():
-    return render_template('index.html',emotion=emotion_value())
+    return render_template('index.html')
 
 def gen(camera):
     while True:
