@@ -12,12 +12,15 @@ class VideoCamera(object):
 
         if ip is None:
             self.flag_webcam = True
+            self.video = cv2.VideoCapture(0)
+
         else:
+            print "ANDROID INIT "
+            self.video = None
             self.flag_webcam = False
             self.stream=urllib.urlopen(ip)
             self.bytes=''
 
-        self.video = cv2.VideoCapture(0)
         self.emotion = -1
         self.activity = 0
         self.firstFrame = None
@@ -38,6 +41,7 @@ class VideoCamera(object):
         if self.flag_webcam is True:
             success, image = self.video.read()
         else:
+            image = None
             counter  = 0
             while counter < 1e3:
                 self.bytes+=self.stream.read(16384)
@@ -51,9 +55,8 @@ class VideoCamera(object):
                     self.bytes= self.bytes[b+2:]
                     i = cv2.imdecode(numpy.fromstring(jpg, dtype=numpy.uint8),cv2.CV_LOAD_IMAGE_COLOR)
                     # print "i",i
-
-                    if i is not None:
-                        image = imutils.resize(i, width=300)
+                    image = imutils.resize(i, width=300)
+                    break
 
                 counter += 1
             print "Error. Could not get a frame!"
