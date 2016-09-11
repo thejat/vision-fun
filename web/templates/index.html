@@ -67,21 +67,37 @@
         <div class="col-sm-4"> 
         
 
-<script>
-$(document).ready(function(){
-    
-    setInterval(function(){
-        $.getJSON("http://0.0.0.0:5000/emotion_value", function(result){
-            console.log(result);
-            $.each(result, function(i, field){
-                $("#emotion").append(field + " ");
-            });
-        });
-    }, 300);
-});
-</script>
+    <script>
 
-      <div id="emotion"></div>
+    var timeoutPeriod = 1000;
+    var imageURI;
+
+    $(document).ready(function(){
+       
+       setInterval(function(){
+           $.getJSON("http://0.0.0.0:5000/emotion_value", function(result){
+               console.log(result);
+               $.each(result, function(i, field){
+                   if (field <= 1) { imageURI = "http://0.0.0.0:5000/static/sad1.jpg"; }
+                   if (field == 2 || field == 3) { imageURI = "http://0.0.0.0:5000/static/neutral1.jpg"; }
+                   if (field > 3) { imageURI = "http://0.0.0.0:5000/static/happy1.jpg"; }
+
+                   $("#emotion").attr("src",imageURI);
+               });
+           });
+       }, timeoutPeriod);
+    });
+
+    </script>
+    <style>
+    img .emotion {
+        display: block;
+        margin: auto;
+        width: 40%;
+      }
+    </style>
+
+              <img id="emotion" src="" alt="No emotion jpg yet."/>
 
 
         </div>
