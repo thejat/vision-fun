@@ -69,9 +69,14 @@ class VideoCamera(object):
         return image
 
     def get_emotion_value(self):
-        print "self.emotion is",self.emotion
+        # print "self.emotion is",self.emotion
         return self.emotion
 
+    def get_state_two_people(self):
+        return self.state_two_people
+
+    def get_state_one_is_representative(self):
+        return self.state_one_is_representative
 
     def check_two_people(self,image):
 
@@ -124,9 +129,19 @@ class VideoCamera(object):
 
         if self.people_duration_counter > 15:
             print "##############  Two people detected ##############"
+            
+            self.save_body_proposals(faces,image)
+
             return True
         else:
             return False
+
+    def save_body_proposals(self,faces,image):
+        top2 = []
+        for i,e in enumerate(faces):
+            (x, y, w, h) = e
+            cv2.imwrite("body_test_image"+str(i)+".png",frame[y:y+h, x:x+w])
+
 
     def detect_representative_color(self,image):
         print "Representative detected"
