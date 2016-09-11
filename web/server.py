@@ -37,7 +37,7 @@ def test():
 
 @app.route('/emotion_value')
 def emotion_value():
-    print "emotion value GET query happened"
+    # print "emotion value GET query happened"
     return jsonify({'emotion':webcam_capture.get_emotion_value()})
 
 if __name__ == '__main__':
