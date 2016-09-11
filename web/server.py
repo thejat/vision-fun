@@ -1,17 +1,14 @@
 from flask import Flask, render_template, Response, jsonify
-
+from camera import VideoCamera
 app = Flask(__name__)
 
 
-flag_android = False
-
-if flag_android is False:
-    from camera import VideoCamera
+flag_webcam = True
+if flag_webcam is True:
     webcam_capture = VideoCamera()
 else:
-    from camera2 import IPCamera
     print "Caution: Verify IP address."
-    webcam_capture = IPCamera('http://192.168.43.50:8080/video')
+    webcam_capture = VideoCamera('http://192.168.43.50:8080/video')
 
 
 @app.route('/')

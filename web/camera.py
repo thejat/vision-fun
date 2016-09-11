@@ -7,7 +7,16 @@ import copy
 
 class VideoCamera(object):
 
-    def __init__(self):
+    def __init__(self,ip=None):
+
+
+        if ip is None:
+            self.flag_webcam = True
+        else:
+            self.flag_webcam = False
+            self.stream=urllib.urlopen(ip)
+            self.bytes=''
+
         self.video = cv2.VideoCapture(0)
         self.emotion = -1
         self.activity = 0
@@ -25,7 +34,29 @@ class VideoCamera(object):
         self.video.release()
     
     def get_frame(self):
-        success, image = self.video.read()
+
+        if self.flag_webcam is True:
+            success, image = self.video.read()
+        else:
+            counter  = 0
+            while counter < 1e3:
+                self.bytes+=self.stream.read(16384)
+                a = self.bytes.find('\xff\xd8')
+                b = self.bytes.find('\xff\xd9')
+                # print 'a',a
+                # print 'b',b
+                if a!=-1 and b!=-1:
+                    jpg = self.bytes[a:b+2]
+                    #print 'jpg',jpg
+                    self.bytes= self.bytes[b+2:]
+                    i = cv2.imdecode(numpy.fromstring(jpg, dtype=numpy.uint8),cv2.CV_LOAD_IMAGE_COLOR)
+                    # print "i",i
+
+                    if i is not None:
+                        image = imutils.resize(i, width=300)
+
+                counter += 1
+            print "Error. Could not get a frame!"
 
         if self.firstFrame is None:
             image = imutils.resize(image, width=300)
