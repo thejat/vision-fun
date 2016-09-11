@@ -1,25 +1,18 @@
 from flask import Flask, render_template, Response, jsonify
-import sqlite3
-from camera import VideoCamera
-# from camera import IPCamera
 
 app = Flask(__name__)
 
 
+flag_android = False
 
-db = sqlite3.connect('mydb')
-cursor = db.cursor()
-cursor.execute('''DROP TABLE users''')
-db.commit()
-cursor.execute('''
-    CREATE TABLE users(id INTEGER PRIMARY KEY, emotion TEXT, activity TEXT)
-''')
-db.commit()
+if flag_android is False:
+    from camera import VideoCamera
+    webcam_capture = VideoCamera()
+else:
+    from camera2 import IPCamera
+    print "Caution: Verify IP address."
+    webcam_capture = IPCamera('http://192.168.43.50:8080/video')
 
-webcam_capture = VideoCamera(db)
-
-
-# ip_capture = IPCamera('http://192.168.43.50:8080/video')
 
 @app.route('/')
 @app.route('/live')

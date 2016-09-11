@@ -1,6 +1,6 @@
 import cv2
 import urllib 
-import numpy as np
+import numpy
 
 
 class IPCamera(object):
@@ -14,10 +14,21 @@ class IPCamera(object):
             self.stream=urllib.urlopen(ip)
             self.bytes=''
 
-    # def __del__(self):
+        self.emotion = 0
+        self.activity = 0
+
+    def compute_emotion(self,image):
+        return numpy.random.randint(0,6)
+
+    def compute_activity(self,image):
+        return numpy.random.randint(0,6)
+
+    def get_emotion_value(self):
+        print "self.emotion is",self.emotion
+        return self.emotion
 
     def get_frame(self):
-
+        counter  = 0
         while counter < 1e3:
             self.bytes+=self.stream.read(16384)
             a = self.bytes.find('\xff\xd8')
@@ -25,14 +36,18 @@ class IPCamera(object):
             # print 'a',a
             # print 'b',b
             if a!=-1 and b!=-1:
-                jpg = bytes[a:b+2]
+                jpg = self.bytes[a:b+2]
                 #print 'jpg',jpg
-                bytes= bytes[b+2:]
-                i = cv2.imdecode(np.fromstring(jpg, dtype=np.uint8),cv2.CV_LOAD_IMAGE_COLOR)
+                self.bytes= self.bytes[b+2:]
+                i = cv2.imdecode(numpy.fromstring(jpg, dtype=numpy.uint8),cv2.CV_LOAD_IMAGE_COLOR)
                 # print "i",i
 
                 if i is not None:
-                    resized_i = cv2.resize(i, (400, 400)) 
+                    resized_i = cv2.resize(i, (400, 400))
+
+                    self.emotion  = self.compute_emotion(resized_i)
+                    self.activity = self.compute_activity(resized_i)
+
                     ret, jpeg = cv2.imencode('.jpg', i)
                     cv2.destroyAllWindows()
                     return jpeg.tobytes()
