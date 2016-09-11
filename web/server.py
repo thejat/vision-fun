@@ -3,7 +3,7 @@ from camera import VideoCamera
 app = Flask(__name__)
 
 
-flag_webcam = False
+flag_webcam = True
 if flag_webcam is True:
     webcam_capture = VideoCamera()
 else:
@@ -36,6 +36,19 @@ def test():
 def emotion_value():
     print "emotion value GET query happened"
     return jsonify({'emotion':webcam_capture.get_emotion_value()})
+
+
+@app.route('/state_two_people_value')
+def state_two_people_value():
+    print "state value GET query happened: two people"
+    return jsonify({'two_people':webcam_capture.get_state_two_people()})
+
+
+@app.route('/state_one_is_representative')
+def state_one_is_representative():
+    print "state value GET query happened: representative"
+    return jsonify({'representative_detected':webcam_capture.get_state_one_is_representative()})
+
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', debug=True,threaded=True)

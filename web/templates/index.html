@@ -91,6 +91,29 @@
                      $("#emotion").attr("src",imageURI);
                  });
              });
+
+
+             $.getJSON("http://0.0.0.0:5000/state_two_people_value", function(result){
+                 console.log(result);
+                 $.each(result, function(i, field){
+                      console.log(typeof(field))
+                     if (field == 1) {  
+                     $("#two-people").text("Two people detected.");
+                   }
+                 });
+             });
+
+             $.getJSON("http://0.0.0.0:5000/state_one_is_representative", function(result){
+                 console.log(result);
+                 $.each(result, function(i, field){
+                      console.log(typeof(field))
+                     if (field == 1) {  
+                     $("#rep-detected").text("Interaction with store representative detected.");
+                   }
+                 });
+             });
+
+
          }, timeoutPeriod);
 
        }, 5000);
@@ -107,6 +130,9 @@
 
               <img id="emotion" src="" alt="No emotion jpg yet."/>
 
+              <p id="two-people" align:"left"> </p>
+              <br/>
+              <p id="rep-detected" align:"left"></p>
 
         </div>
       </div>

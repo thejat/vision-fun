@@ -116,10 +116,16 @@ class VideoCamera(object):
         return self.emotion
 
     def get_state_two_people(self):
-        return self.state_two_people
+        if self.state_two_people: 
+            return 1
+        else:
+            return 0
 
     def get_state_one_is_representative(self):
-        return self.state_one_is_representative
+        if self.state_one_is_representative:
+            return 1
+        else:
+            return 0
 
     def check_two_people(self,image):
 
