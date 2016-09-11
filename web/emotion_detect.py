@@ -15,16 +15,19 @@ clf_model = pickle.load(open("emotion_model.pkl","rb"))
 
 def compute_emotion(image):
     face_features = get_landmark_features(image)
+    print "face_features dimension:      ", face_features.shape
     if face_features == 'error':
         emotion = -1
     else:
-        try:
-            emotion = clf_model.predict(face_features)[0]
-            #pdb.set_trace()
-            if(emotion == 0 or emotion == 1 or emotion == 2  or emotion == 4 ):
-                emotion = 2    
-        except:
-            pdb.set_trace()
+    #try:
+        emotion = clf_model.predict(face_features)[0]
+        #pdb.set_trace()
+        if(emotion == 0 or emotion == 1 or emotion == 2  or emotion == 4 ):
+            emotion = 2    
+    #except:
+        # print "exception happened"
+        #pdb.set_trace()
+        # emotion = -1
     return emotion    
 
 
@@ -47,8 +50,8 @@ def get_landmark_features(img):
             pts_x.append(shape.part(i).x)
             pts_y.append(shape.part(i).y)
             #cv2.circle(img, (shape.part(i).x, shape.part(i).y), 1, (0,0,255), thickness=1) #For each point, draw a red circle with thickness2 on the original frame
-        #pts_x = np.array(pts_x)
-        #pts_y = np.array(pts_y)
+        # pts_x = np.array(pts_x)
+        # pts_y = np.array(pts_y)
 
         xmean = np.mean(pts_x) #Get the mean of both axes to determine centre of gravity
         ymean = np.mean(pts_y)
@@ -64,6 +67,9 @@ def get_landmark_features(img):
             anglerelative = (math.atan((z-ymean)/(w-xmean))*180/math.pi)
             landmarks_vectorised.append(dist)
             landmarks_vectorised.append(anglerelative)
+
+        break
+
     if len(detections) < 1: 
         landmarks_vectorised = 'error'
     return np.nan_to_num(np.array(landmarks_vectorised))    

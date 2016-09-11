@@ -44,6 +44,8 @@ class VideoCamera(object):
         if self.state_one_is_representative is True:
             self.emotion_counter += 1
             if self.emotion_counter%20==0:
+                # self.emotion  = numpy.random.choice([-1,2,3,5,6],1,[.2,.2,.2,.2,.2])[0]
+                print "emotion value before marking video frame",self.emotion
                 self.emotion  = compute_emotion(image)
 
         image_marked = self.get_faces(image)
@@ -52,6 +54,8 @@ class VideoCamera(object):
         return jpeg.tobytes()
 
     def get_faces(self,image):
+
+        print "inside get_faces function"
 
         gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 
@@ -63,13 +67,18 @@ class VideoCamera(object):
             flags=cv2.cv.CV_HAAR_SCALE_IMAGE
         )
 
+        print "inside get_faces function: faces detected"
+
         # Draw a rectangle around the faces
         for (x, y, w, h) in faces:
             cv2.rectangle(image, (x, y), (x+w, y+h), (0, 255, 0), 2)
+
+        print "inside get_faces function: rectangles drawn"
+
         return image
 
     def get_emotion_value(self):
-        # print "self.emotion is",self.emotion
+        print "self.emotion is",self.emotion
         return self.emotion
 
     def get_state_two_people(self):
@@ -80,7 +89,7 @@ class VideoCamera(object):
 
     def check_two_people(self,image):
 
-        min_area = 1200
+        min_area = 1000
 
         # resize the frame, convert it to grayscale, and blur it
         frame = imutils.resize(image, width=300)
@@ -99,48 +108,48 @@ class VideoCamera(object):
         thresh = cv2.dilate(thresh, None, iterations=2)
         (cnts, _) = cv2.findContours(thresh.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 
-        # loop over the contours
-        valid = 0
-        for c in cnts:
-            # if the contour is too small, ignore it
-            if cv2.contourArea(c) < min_area:
-                continue
+        temp = 15
+        if self.people_duration_counter < temp:
+            # loop over the contours
+            valid = 0
+            for c in cnts:
+                # if the contour is too small, ignore it
+                if cv2.contourArea(c) < min_area:
+                    continue
 
-            (x, y, w, h) = cv2.boundingRect(c)
-            if w > 30 and h > 30:
-                valid += 1
+                (x, y, w, h) = cv2.boundingRect(c)
+                if w > 15 and h > 15:
+                    valid += 1
 
-        if valid >= 2:
-
-            gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-
-            faces = self.faceCascade.detectMultiScale(
-                gray,
-                scaleFactor=1.1,
-                minNeighbors=5,
-                minSize=(30, 30),
-                flags=cv2.cv.CV_HAAR_SCALE_IMAGE
-            )
-            
-            if len(faces) > 1:       
+            if valid >= 2:
                 self.people_duration_counter += 1
 
-        print "\n\n\n {0} \n\n\n".format(self.people_duration_counter)
+        print "\n\n\n Possibility of two people: {0} \n\n\n".format(self.people_duration_counter)
 
-        if self.people_duration_counter > 15:
+
+        gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+        faces = self.faceCascade.detectMultiScale(
+            gray,
+            scaleFactor=1.1,
+            minNeighbors=5,
+            minSize=(30, 30),
+            flags=cv2.cv.CV_HAAR_SCALE_IMAGE
+        )
+
+
+        if self.people_duration_counter == temp and len(faces) > 1:
             print "##############  Two people detected ##############"
             
-            self.save_body_proposals(faces,image)
+            self.save_body_proposals(faces,frame)
 
             return True
         else:
             return False
 
     def save_body_proposals(self,faces,image):
-        top2 = []
         for i,e in enumerate(faces):
             (x, y, w, h) = e
-            cv2.imwrite("body_test_image"+str(i)+".png",frame[y:y+h, x:x+w])
+            cv2.imwrite("body_test_image"+str(i)+".png",image[y:, x:x+w])
 
 
     def detect_representative_color(self,image):

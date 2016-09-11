@@ -81,10 +81,10 @@
                $.each(result, function(i, field){
                     console.log(typeof(field))
                    if (field == 2) { imageURI = "http://0.0.0.0:5000/static/sad1.jpg"; }
-                   if (field == 5) { imageURI = ""; }
-                   if (field == 6) { imageURI = ""; }
                    if (field == 3) { imageURI = "http://0.0.0.0:5000/static/happy1.jpg"; }
-                   if (field == -1) {imageURI = ""}
+                   if (field == 5) { imageURI = ""; }
+                   if (field == 6) { imageURI = "http://0.0.0.0:5000/static/neutral1.jpg"; }
+                   if (field == -1) {imageURI = "http://0.0.0.0:5000/static/noemotion1.jpg"}
 
                    $("#emotion").attr("src",imageURI);
                });
