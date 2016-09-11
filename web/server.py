@@ -3,7 +3,7 @@ from camera import VideoCamera
 app = Flask(__name__)
 
 
-flag_webcam = True
+flag_webcam = False
 if flag_webcam is True:
     webcam_capture = VideoCamera()
 else:
