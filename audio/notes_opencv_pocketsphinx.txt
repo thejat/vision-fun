@@ -1,0 +1,66 @@
+openface: 
+	break one layer before to get 
+
+D:\sequoia\opencv1\opencv\build\python\2.7\x64
+C:\Users\q4fj4lj9\AppData\Local\Continuum\Miniconda\Lib\site-packages
+
+https://hub.docker.com/r/bamos/openface/
+
+ln -s /usr/local/Cellar/opencv/2.4.13/lib/python2.7/site-packages/cv.py cv.py
+ln -s /usr/local/Cellar/opencv/2.4.13/lib/python2.7/site-packages/cv2.so cv2.so
+===================================================
+
+    screen -S thejasessionname #starts a screen session
+    ctrl-a c #create new window
+    ctrl-a n #next window
+    ctrl-a p #previous window
+    screen -X -S [session # you want to kill] quit #to kill session from commandline
+    screen -list #list screen sessions for attaching
+    ctrl-a H #to log/unlog your screen sesison
+    screen -r thejasessionname #reattach to session thejasessionname
+    ctrl-a d #detach from this screen session
+    ctrl-a ? #within screen help
+    screen --help #screen commandline help
+    ctrl-a w #shows which window you are in
+    screen -S sessionname -p 0 -X quit #kills a detached session
+
+====================================================
+
+swig for poketsphinx
+
+./configure --without-pcre
+make
+sudo make install
+
+
+====================================================
+
+pocketsphinx_continuous -inmic yes -keyphrase "cannot find" -kws_threshold 1e-20
+
+
+oh mighty computer /1e-40/
+hello world /1e-30/
+other_phrase /other_phrase_threshold/
+
+pocketsphinx_continuous -inmic yes -kws keyphrase_list
+
+
+
+====================================================
+
+
+
+two camera tracking
+object tracking: hardcoded videos
+visualization using d3
+one additional live video.
+recommendation using a simple choice model
+specialized training of a pretrained net results in better performance
+
+
+
+
+====================================================
+
+
+file:///Users/theja/Downloads/sequoia/code/web/templates/index2.html

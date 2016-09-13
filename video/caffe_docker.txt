@@ -1,0 +1,2 @@
+docker run -ti yshean/caffe-cpu /bin/bash
+docker run -ti yshean/caffe-cpu /bin/bash -v /Users/theja/Downloads/sequoia:/sequoia
